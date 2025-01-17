@@ -1,9 +1,10 @@
 import { useOAuth } from "@clerk/clerk-expo";
-import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Image, TouchableOpacity, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebBrowser from "expo-web-browser";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 
 export default function Index() {
   const { startOAuthFlow: appleOauth } = useOAuth({ strategy: "oauth_apple" });
@@ -12,6 +13,7 @@ export default function Index() {
   });
 
   const { top } = useSafeAreaInsets();
+  const { user } = useUser();
 
   const handleAppleOAuth = async () => {
     try {
@@ -47,35 +49,42 @@ export default function Index() {
         source={require("@/assets/images/todoist-logo.png")}
         style={styles.loginImage}
       />
-      <Image
-        source={require("@/assets/images/login.png")}
-        style={styles.bannerImage}
-      />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleAppleOAuth}>
-          <Ionicons name="logo-apple" size={24} />
-          <Text style={styles.buttonText}>Continue with Apple</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleGoogleOAuth}>
-          <Ionicons name="logo-google" size={24} />
-          <Text style={styles.buttonText}>Continue with Google</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-          <Ionicons name="mail" size={24} />
-          <Text style={styles.buttonText}>Continue with Email</Text>
-        </TouchableOpacity>
+      <SignedIn>
+        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+      </SignedIn>
+      <SignedOut>
+        <View>
+          <Image
+            source={require("@/assets/images/login.png")}
+            style={styles.bannerImage}
+          />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleAppleOAuth}>
+              <Ionicons name="logo-apple" size={24} />
+              <Text style={styles.buttonText}>Continue with Apple</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleGoogleOAuth}>
+              <Ionicons name="logo-google" size={24} />
+              <Text style={styles.buttonText}>Continue with Google</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Ionicons name="mail" size={24} />
+              <Text style={styles.buttonText}>Continue with Email</Text>
+            </TouchableOpacity>
 
-        <Text style={styles.description}>
-          By continuing you agree to Todoist's clone{" "}
-          <Text style={styles.link} onPress={openLink}>
-            Terms of Service
-          </Text>{" "}
-          and{" "}
-          <Text style={styles.link} onPress={openLink}>
-            Privacy Policy
-          </Text>
-        </Text>
-      </View>
+            <Text style={styles.description}>
+              By continuing you agree to Todoist's clone{" "}
+              <Text style={styles.link} onPress={openLink}>
+                Terms of Service
+              </Text>{" "}
+              and{" "}
+              <Text style={styles.link} onPress={openLink}>
+                Privacy Policy
+              </Text>
+            </Text>
+          </View>
+        </View>
+      </SignedOut>
     </View>
   );
 }
