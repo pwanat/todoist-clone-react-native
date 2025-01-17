@@ -22,11 +22,8 @@ const InitialLayout = () => {
   useEffect(() => {
     if (!isLoaded) return;
     const inAuthGroup = segments[0] === "(authenticated)";
-    console.log("🚀 ~ useEffect ~ inAuthGroup:", inAuthGroup);
-    console.log("🚀 ~ useEffect ~ isLoaded:", isLoaded);
-    console.log("🚀 ~ useEffect ~ isSignedIn:", isSignedIn);
     if (isSignedIn && !inAuthGroup) {
-      router.replace('/today');
+      router.replace('/(authenticated)/(tabs)/search');
     } else if (!isSignedIn && pathname !== "/") {
       router.replace("/");
     }
@@ -40,6 +37,7 @@ const InitialLayout = () => {
       }}
     >
       <Stack.Screen name="index" />
+      <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
     </Stack>
   );
 };
