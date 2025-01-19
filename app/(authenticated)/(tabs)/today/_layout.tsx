@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { Colors } from '@/constants/Colors';
-// import MoreButton from '@/components/MoreButton';
+import MoreButton from '@/components/more-button';
 
 const Layout = () => {
   return (
@@ -8,15 +8,17 @@ const Layout = () => {
       screenOptions={{
         headerShadowVisible: false,
         contentStyle: { backgroundColor: Colors.background },
-      }}>
-      {/* <Stack.Screen
+        
+      }}
+      >
+      <Stack.Screen
         name="index"
         options={{
           title: 'Today',
           headerLargeTitle: true,
-          headerRight: () => <MoreButton pageName="Today" />,
+          headerRight: () => <MoreButton  />,
         }}
-      /> */}
+      />
     </Stack>
   );
 };
