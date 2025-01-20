@@ -1,12 +1,19 @@
-import { Stack, useRouter } from 'expo-router';
-import { useWindowDimensions, Text, View } from 'react-native';
-import { Colors } from '@/constants/Colors';
+import { Redirect, Stack, useRouter } from "expo-router";
+import { useWindowDimensions, Text, View } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { useAuth } from "@clerk/clerk-expo";
 
 const Layout = () => {
-//   const { height } = useWindowDimensions();
-//   const router = useRouter();
+  //   const { height } = useWindowDimensions();
+  //   const router = useRouter();
+  const { isSignedIn } = useAuth();
+
+  if (!isSignedIn) {
+    return <Redirect href={"/"} />;
+  }
+
   return (
-    <Stack screenOptions={{ contentStyle: { backgroundColor: '#fff' } }}>
+    <Stack screenOptions={{ contentStyle: { backgroundColor: "#fff" } }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       {/* <Stack.Screen
         name="task/[id]"

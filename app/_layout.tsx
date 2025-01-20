@@ -1,7 +1,6 @@
 import { tokenCache } from "@/utils/cache";
-import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
-import { Stack, useRouter, useSegments, usePathname } from "expo-router";
-import { useEffect } from "react";
+import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
+import { Stack} from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
@@ -14,21 +13,6 @@ if (!publishableKey) {
 }
 
 const InitialLayout = () => {
-  const { isLoaded, isSignedIn } = useAuth();
-  const router = useRouter();
-  const segments = useSegments();
-  const pathname = usePathname();
-
-  // TODO: I don't like that, refactor to use <SignedIn></SignedOut>?
-  useEffect(() => {
-    if (!isLoaded) return;
-    const inAuthGroup = segments[0] === "(authenticated)";
-    if (isSignedIn && !inAuthGroup) {
-      router.replace("/(authenticated)/(tabs)/search");
-    } else if (!isSignedIn && pathname !== "/") {
-      router.replace("/");
-    }
-  }, [isSignedIn]);
 
   return (
     <GestureHandlerRootView>
@@ -38,6 +22,7 @@ const InitialLayout = () => {
           contentStyle: { backgroundColor: Colors.background },
         }}
       >
+        <Stack.Screen name="oauth-native-callback" />
         <Stack.Screen name="index" />
         <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
       </Stack>

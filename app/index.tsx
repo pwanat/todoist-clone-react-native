@@ -1,12 +1,15 @@
-import { useOAuth } from "@clerk/clerk-expo";
+import { useAuth, useOAuth } from "@clerk/clerk-expo";
 import { Text, View, StyleSheet, Image, TouchableOpacity, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebBrowser from "expo-web-browser";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
+import { Redirect } from "expo-router";
 
 export default function Index() {
+
+  const { isSignedIn } = useAuth();
   const { startOAuthFlow: appleOauth } = useOAuth({ strategy: "oauth_apple" });
   const { startOAuthFlow: googleOAuth } = useOAuth({
     strategy: "oauth_google",
@@ -43,16 +46,16 @@ export default function Index() {
     WebBrowser.openBrowserAsync("https://google.com");
   };
 
+  if(isSignedIn) {  
+    return <Redirect href="/(authenticated)/(tabs)/search" />;
+  }
+
   return (
     <View style={[styles.container, { paddingTop: top }]}>
       <Image
         source={require("@/assets/images/todoist-logo.png")}
         style={styles.loginImage}
       />
-      <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-      </SignedIn>
-      <SignedOut>
         <View>
           <Image
             source={require("@/assets/images/login.png")}
@@ -84,7 +87,7 @@ export default function Index() {
             </Text>
           </View>
         </View>
-      </SignedOut>
+      
     </View>
   );
 }
